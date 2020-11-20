@@ -7,8 +7,7 @@ A [Krawler](https://kalisio.github.io/krawler/) based service to download data f
 
 ## Description
 
-The **k-openradiation** job allow to scrape measurements from the [OpenRadiation API](https://github.com/openradiation/openradiation-api). The downloaded data are stored within a [MongoDB](https://www.mongodb.com/) database and more precisely in the collection `openradiation`.
-
+The **k-openradiation** job allow to scrape measurements from the [OpenRadiation API](https://github.com/openradiation/openradiation-api). The downloaded data are stored within a [MongoDB](https://www.mongodb.com/) database and more precisely in a collection named `openradiation`. 
 
 All records are stored in [GeoJson](https://fr.wikipedia.org/wiki/GeoJSON) format.
 
