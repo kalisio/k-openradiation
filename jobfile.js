@@ -1,11 +1,11 @@
 const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/openradiation'
 const ttl = +process.env.TTL || (7 * 24 * 60 * 60)  // duration in seconds
 const key = process.env.KEY
+const complete = +process.env.COMPLETE || 'true'
 
 const now = new Date(Date.now())
-const date = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate()
-
-console.log(date)
+const dateOfCreation = 'dateOfCreation=' + now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + (now.getDate() - 1)
+const response = complete === 'true' ? 'complete' : ''
 
 module.exports = {
   id: 'openradiation',
@@ -17,7 +17,7 @@ module.exports = {
     id: 'openradiation',
     type: 'http',
     options: {
-      url: 'https://request.openradiation.net/measurements?apiKey=' + key + '&dateOfCreation=' + date
+      url: 'https://request.openradiation.net/measurements?apiKey=' + key + '&dateOfCreation=' + dateOfCreation + '&response=' + response
     }
   }],
   hooks: {
@@ -30,13 +30,13 @@ module.exports = {
           longitude: 'longitude'
         },
         updateMongoCollection: {
-          dataPath: 'result.data.data',
+          dataPath: 'result.data.data.features',
           collection: 'openradiation',
           filter: { 'properties.reportUuid': '<%= properties.reportUuid %>' },
           upsert : true,
           transform: {
             mapping: {
-              'properties.startTime': 'time',
+              'properties.startTime': 'time'
             },
             unitMapping: { 
               time: { asDate: 'utc' } 
@@ -81,3 +81,4 @@ module.exports = {
     }
   }
 }
+
