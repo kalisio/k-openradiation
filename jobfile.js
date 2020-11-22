@@ -4,7 +4,7 @@ const key = process.env.KEY
 const complete = +process.env.COMPLETE || 'true'
 
 const now = new Date(Date.now())
-const dateOfCreation = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate()
+const dateOfCreation = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + (now.getDate() - 1)
 const response = complete === 'true' ? 'complete' : ''
 
 module.exports = {
@@ -36,7 +36,8 @@ module.exports = {
           upsert : true,
           transform: {
             mapping: {
-              'properties.startTime': 'time'
+              'properties.startTime': { path: 'time', delete: false },
+              'properties.userId': { path: 'properties.name', delete: false }
             },
             unitMapping: { 
               time: { asDate: 'utc' } 
