@@ -59,8 +59,8 @@ module.exports = {
           collection: 'openradiation',
           indices: [
             [{ time: 1, 'properties.reportUuid': 1 }, { unique: true }],
-            { 'properties.value': 1 },
-            { 'properties.reportUuid': 1, 'properties.value': 1, time: -1 },
+            { 'properties.reportUuid': 1 },
+            [{ 'properties.reportUuid': 1, 'properties.value': 1, time: -1 },  { background: true }],
             [{ time: 1 }, { expireAfterSeconds: ttl }], // days in s
             { geometry: '2dsphere' }                                                                                                              
           ],
