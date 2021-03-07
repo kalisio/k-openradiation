@@ -4,8 +4,7 @@ const key = process.env.KEY
 const complete = +process.env.COMPLETE || 'true'
 
 const now = new Date(Date.now())
-const dateOfCreation = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + (now.getDate() - 1)
-const response = complete === 'true' ? 'complete' : ''
+const dateOfCreation = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate()
 
 module.exports = {
   id: 'openradiation',
@@ -17,7 +16,7 @@ module.exports = {
     id: 'openradiation',
     type: 'http',
     options: {
-      url: 'https://request.openradiation.net/measurements?apiKey=' + key + '&dateOfCreation=' + dateOfCreation + '&response=' + response
+      url: 'https://request.openradiation.net/measurements?apiKey=' + key + '&dateOfCreation=' + dateOfCreation + '&response=complete'
     }
   }],
   hooks: {
