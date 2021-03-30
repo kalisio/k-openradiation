@@ -1,11 +1,30 @@
+const krawler = require('@kalisio/krawler')
+const hooks = krawler.hooks
+
 const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/openradiation'
 const ttl = +process.env.TTL || (7 * 24 * 60 * 60)  // duration in seconds
 const key = process.env.KEY
 
-const now = new Date(Date.now())
-const dateOfCreation = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate()
+const baseUrl = 'https://request.openradiation.net/measurements'
 
-console.log('querying the api with the criteria dateOfCreation: ' + dateOfCreation)
+let dateOfCreation = undefined
+
+// Create a custom hook to generate tasks
+let generateTask = (options) => {
+  return (hook) => {
+    const now = new Date(Date.now())
+    const dateOfCreation = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate()
+    console.log('querying the api with the criteria dateOfCreation: ' + dateOfCreation)
+    let task = {
+      options: { 
+        url: baseUrl + '?apiKey=' + key + '&dateOfCreation=' + dateOfCreation + '&response=complete'
+      }
+    }
+    hook.data.tasks = [task]
+    return hook
+  }
+}
+hooks.registerHook('generateTask', generateTask)
 
 module.exports = {
   id: 'openradiation',
@@ -13,13 +32,10 @@ module.exports = {
   options: {
     workersLimit: 1
   },
-  tasks: [{
+  taskTemplate: {
     id: 'openradiation',
-    type: 'http',
-    options: {
-      url: 'https://request.openradiation.net/measurements?apiKey=' + key + '&dateOfCreation=' + dateOfCreation + '&response=complete'
-    }
-  }],
+    type: 'http'
+  },
   hooks: {
     tasks: {
       after: {
@@ -65,7 +81,8 @@ module.exports = {
             [{ time: 1 }, { expireAfterSeconds: ttl }], // days in s
             { geometry: '2dsphere' }                                                                                                              
           ],
-        }
+        },
+        generateTask: {}
       },
       after: {
         disconnectMongo: {
