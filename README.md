@@ -18,7 +18,6 @@ The job is executed according a specific cron expression. By default, every hour
 | Variable | Description |
 |--- | --- |
 | `KEY` | The key to use the API. As mentioned [here](https://www.openradiation.org/en/developers), you should ask this access code to the **OpenRadiation** team. | - |
-| `COMPLETE` | An option to specify whether you are requesting the complete answer or not. Check the [documentation](https://github.com/openradiation/openradiation-api#requesting-the-api) for more details. | `true` |
 | `DB_URL` | The mongoDB database URL. The default value is `mongodb://127.0.0.1:27017/openradiation` |
 | `TTL` | The measurements data time to live. It must be expressed in seconds and the default value is `604 800` (7 days) | 
 | `DEBUG` | Enables debug output. Set it to `krawler*` to enable full output. By default it is undefined. |

@@ -1,10 +1,11 @@
 const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/openradiation'
 const ttl = +process.env.TTL || (7 * 24 * 60 * 60)  // duration in seconds
 const key = process.env.KEY
-const complete = +process.env.COMPLETE || 'true'
 
 const now = new Date(Date.now())
 const dateOfCreation = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate()
+
+console.log('querying the api with the criteria dateOfCreation: ' + dateOfCreation)
 
 module.exports = {
   id: 'openradiation',
