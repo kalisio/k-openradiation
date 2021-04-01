@@ -1,7 +1,7 @@
 {
   "name": "k-openradiation",
   "description": "",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "homepage": "https://github.com/kalisio/k-openradiation",
   "keywords": [
     "krawler",
@@ -35,6 +35,6 @@
     "generate-changelog": "^1.8.0"
   },
   "peerDependencies": {
-    "@kalisio/krawler": "^1.2.0"
+    "@kalisio/krawler": "1.2.0"
   }
 }
