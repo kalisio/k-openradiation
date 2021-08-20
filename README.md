@@ -1,7 +1,7 @@
 # k-openradiation
 
 [![Latest Release](https://img.shields.io/github/v/tag/kalisio/k-openradiation?sort=semver&label=latest)](https://github.com/kalisio/k-openradiation/releases)
-[![Build Status](https://travis-ci.com/kalisio/k-openradiation.png?branch=master)](https://travis-ci.com/kalisio/k-openradiation)
+[![Build Status](https://app.travis-ci.com/kalisio/k-openradiation.svg?branch=master)](https://app.travis-ci.com/kalisio/k-openradiation)
 
 A [Krawler](https://kalisio.github.io/krawler/) based service to download data from the [OpenRadiation](https://www.openradiation.org/) project.
 
