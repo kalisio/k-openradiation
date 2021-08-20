@@ -1,32 +1,28 @@
 language: node_js
 node_js:
-  - '12'
+- '12'
 services:
-  - docker
-
+- docker
 notifications:
   email: false
   slack:
     rooms:
-      secure: hzKQlSzA2buvf8IJCHgvWE4KL+sE2PZcw+CWfyeTEUfbforB89DN4ArFkhXSwD6/VdIqlJC/gKw36Yc+ujwq/2y+w3eWq0rLqizaO1uATwtAeZrYO/1GAAmG8AKb8xmkLinmdgjBrpV8IPNMcxY7bWvRBFsuSSNIlWK4X8CT53tXNpVuGYxEQCWJhvOjTcNF11Tzm/kZueb8okM3C7sDRVpoxSZSXz0+pIVg4DITWa6bX99I6XL26HEvBU21jUfZmR3Rcldqexygbi4VesBo7coaYW+U2RaDWbEg8/avKd/E1WuFy/YfVK9fNkBo5P0L5CZx0HKMHPpyWYBC7i6pI8sXHNZZ/U+KsvFwXr8ErA2fGOHiCgaH1tn90jIxIHtUSiNLGVCcG4TJDT5e5nkh1FbXii5GuzWRF5ZjBe169+2/trTU7DGeDcEZcjBqm9F5Vt5lUGY+PUTZ0czYvsw/n4Xj/gWnnmBOm1HC2XmZlr6bxxEgmGfSqFgqhLxuMibA5SsD2fJEcj7DcUpspygYtchmoKMRSin/R10/5pd7pPrS+0QlFdsVfy9Gt/BpSXQds31JywS8pxhPSpzuzGtcv0qoVuJa99qLVLGAYeiR6wHWY94+kCKQIC5MtP35Hp6RJYmanRn+vOqPF5GUelkGo5goHOYxw9PGZymz0zhmklg=
+      secure: fGIJASnsDMp/vDgBoDf7w0nDkPB/9rVc3e/M7Lw/cdOWlSKqjnc9kKvykQJMi6DvVe/t/GzeWQSQMbXjw6Zz6eU62ZZZJw/bibhh7jnCwLONal1kCnyBfQaVLkJpeiFTy7aTeP85UzJu/vk1SyEVDxd7UnfCsA3MnBf2IatDAKJyMm+J0HSUygbr+r7AWNGpD51nHgsAirmtjSxsxD2x/wzp8p6J23ee+PWDuJ+lTvGXj589mfzrYs5m01LPyynwMHw4rwmOT0H1GqljTP0iqd4cKkLdrUiYEhQ9xk+Ik9cfOdxtYUb0mJXfTxJt8mHp1chgnI2eWEcYU6uE6NVQYklQMu6RI8fhkEsdhqvWoLPf+mSy9RYMhZvhyRc0ac6Yj+yxVbPjGNE+o/Z1WNKEnhxaDEj9qSmUw9r7soKGsctUdDDekYZMqSOYvYOB9IvnXSl8e2BYR6D3GbpbF9wlDEQLfCmDRMN+D8P1y6YFNWgjTXqFR6OKW7NUs4H7J53ApsY7iYtgeE1YJNEHayp2uqbQ1KQTb0UPWcdFcE0OMSMDqgbywgeU/nMy4TNthr/hAvQzairqTgqHhAtfEjZsee6qYLr0ZaFt9OIjwHjsTwS886lqK8VANZLVAGIpkx4zlCHdyjhxfSN+5vJD2EgSQxkgZZ06OXRcYxGsHbd+wwQ=
     on_success: always
-    on_failure: always  
-
+    on_failure: always
 script:
-  - |
-   IMAGE_NAME="$TRAVIS_REPO_SLUG"
-   if [[ -z "$TRAVIS_TAG" ]]; then
-     IMAGE_TAG=latest
-     KRAWLER_TAG=latest
-   else
-     IMAGE_TAG=$(node -p -e "require('./package.json').version")
-     KRAWLER_TAG=$(node -p -e "require('./package.json').peerDependencies['@kalisio/krawler']")
-   fi
-   docker build --build-arg KRAWLER_TAG=$KRAWLER_TAG -f dockerfile -t $IMAGE_NAME:$IMAGE_TAG .
-
+- |
+  IMAGE_NAME="$TRAVIS_REPO_SLUG"
+  if [[ -z "$TRAVIS_TAG" ]]; then
+    IMAGE_TAG=latest
+    KRAWLER_TAG=latest
+  else
+    IMAGE_TAG=$(node -p -e "require('./package.json').version")
+    KRAWLER_TAG=$(node -p -e "require('./package.json').peerDependencies['@kalisio/krawler']")
+  fi
+  docker build --build-arg KRAWLER_TAG=$KRAWLER_TAG -f dockerfile -t $IMAGE_NAME:$IMAGE_TAG .
 before_deploy:
-  - docker login -u="$DOCKER_USER" -p="$DOCKER_PASSWORD"
-
+- docker login -u="$DOCKER_USER" -p="$DOCKER_PASSWORD"
 deploy:
   provider: script
   script: docker push $IMAGE_NAME:$IMAGE_TAG
