@@ -3,6 +3,7 @@
   "description": "",
   "version": "0.1.0",
   "homepage": "https://github.com/kalisio/k-openradiation",
+  "type": "module",  
   "keywords": [
     "krawler",
     "kargo",
@@ -35,6 +36,6 @@
     "generate-changelog": "^1.8.0"
   },
   "peerDependencies": {
-    "@kalisio/krawler": "1.2.0"
+    "@kalisio/krawler": "2.0.0"
   }
 }

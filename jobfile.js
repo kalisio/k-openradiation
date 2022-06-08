@@ -1,5 +1,4 @@
-const krawler = require('@kalisio/krawler')
-const hooks = krawler.hooks
+import { hooks } from '@kalisio/krawler'
 
 const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/openradiation'
 const ttl = +process.env.TTL || (7 * 24 * 60 * 60)  // duration in seconds
@@ -26,7 +25,7 @@ let generateTask = (options) => {
 }
 hooks.registerHook('generateTask', generateTask)
 
-module.exports = {
+export default {
   id: 'openradiation',
   store: 'memory',
   options: {
