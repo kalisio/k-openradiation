@@ -6,8 +6,6 @@ const key = process.env.KEY
 
 const baseUrl = 'https://request.openradiation.net/measurements'
 
-let dateOfCreation = undefined
-
 // Create a custom hook to generate tasks
 let generateTask = (options) => {
   return (hook) => {
