@@ -63,7 +63,7 @@ export default {
     },
     jobs: {
       before: {
-        createStores: [{ id: 'memory' }],
+        createStores: { id: 'memory' },
         connectMongo: {
           url: dbUrl,
           clientPath: 'taskTemplate.client'
