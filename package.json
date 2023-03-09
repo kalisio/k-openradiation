@@ -1,7 +1,7 @@
 {
   "name": "k-openradiation",
   "description": "",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "homepage": "https://github.com/kalisio/k-openradiation",
   "type": "module",
   "keywords": [
@@ -31,8 +31,7 @@
     "postversion": "git push origin HEAD --tags"
   },
   "dependencies": {},
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "peerDependencies": {
     "@kalisio/krawler": "2.3.0"
   }
