@@ -33,6 +33,6 @@
   "dependencies": {},
   "devDependencies": {},
   "peerDependencies": {
-    "@kalisio/krawler": "2.3.0"
+    "@kalisio/krawler": "2.5.0"
   }
 }
