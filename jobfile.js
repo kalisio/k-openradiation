@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { hooks } from '@kalisio/krawler'
 
 const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/openradiation'
@@ -41,6 +42,10 @@ export default {
           dataPath: 'result.data.data',
           latitude: 'latitude',
           longitude: 'longitude'
+        },
+        apply: (item) => {
+          const measurements = _.get(item.data, 'data.features')
+          console.log(`[!] Found ${_.size(measurements)} measurements`)
         },
         updateMongoCollection: {
           dataPath: 'result.data.data.features',

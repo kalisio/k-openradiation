@@ -30,7 +30,9 @@
     "release:patch": "npm version --force patch",
     "postversion": "git push origin HEAD --tags"
   },
-  "dependencies": {},
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
   "devDependencies": {},
   "peerDependencies": {
     "@kalisio/krawler": "2.5.0"
