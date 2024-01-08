@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import moment from 'moment'
 import { hooks } from '@kalisio/krawler'
 
 const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/openradiation'
@@ -10,9 +11,10 @@ const baseUrl = 'https://request.openradiation.net/measurements'
 // Create a custom hook to generate tasks
 let generateTask = (options) => {
   return (hook) => {
-    const now = new Date(Date.now())
-    const dateOfCreation = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate()
-    console.log('querying the api with the criteria dateOfCreation: ' + dateOfCreation)
+    // For testing purpose we can set a fixed date
+    const now = moment.utc(process.env.DATE_OF_CREATION)
+    const dateOfCreation = now.format('YYYY-M-D')
+    console.log('Querying the api with the following dateOfCreation: ' + dateOfCreation)
     let task = {
       options: { 
         url: baseUrl + '?apiKey=' + key + '&dateOfCreation=' + dateOfCreation + '&response=complete'
@@ -24,81 +26,87 @@ let generateTask = (options) => {
 }
 hooks.registerHook('generateTask', generateTask)
 
-export default {
-  id: 'openradiation',
-  store: 'memory',
-  options: {
-    workersLimit: 1
-  },
-  taskTemplate: {
+export const createJob = (options = {}) => {
+  const collection = options.collection || 'openradiation'
+
+  return {
     id: 'openradiation',
-    type: 'http'
-  },
-  hooks: {
-    tasks: {
-      after: {
-        readJson: {},
-        convertToGeoJson: {
-          dataPath: 'result.data.data',
-          latitude: 'latitude',
-          longitude: 'longitude'
-        },
-        apply: (item) => {
-          const measurements = _.get(item.data, 'data.features')
-          console.log(`[!] Found ${_.size(measurements)} measurements`)
-        },
-        updateMongoCollection: {
-          dataPath: 'result.data.data.features',
-          collection: 'openradiation',
-          filter: { 'properties.reportUuid': '<%= properties.reportUuid %>' },
-          upsert : true,
-          transform: {
-            mapping: {
-              'properties.startTime': { path: 'time', delete: false },
-              'properties.userId': { path: 'properties.name', delete: false }
-            },
-            unitMapping: { 
-              time: { asDate: 'utc' } 
-            } 
-          },
-          chunkSize: 256
-        },
-        clearData: {}
-      }
+    store: 'memory',
+    options: {
+      workersLimit: 1
     },
-    jobs: {
-      before: {
-        createStores: { id: 'memory' },
-        connectMongo: {
-          url: dbUrl,
-          clientPath: 'taskTemplate.client'
-        },
-        createMongoCollection: {
-          clientPath: 'taskTemplate.client',
-          collection: 'openradiation',
-          indices: [
-            [{ time: 1, 'properties.reportUuid': 1 }, { unique: true }],
-            { 'properties.reportUuid': 1 },
-            [{ 'properties.reportUuid': 1, 'properties.value': 1, time: -1 },  { background: true }],
-            [{ time: 1 }, { expireAfterSeconds: ttl }], // days in s
-            { geometry: '2dsphere' }                                                                                                              
-          ],
-        },
-        generateTask: {}
+    taskTemplate: {
+      id: 'openradiation',
+      type: 'http'
+    },
+    hooks: {
+      tasks: {
+        after: {
+          readJson: {},
+          convertToGeoJson: {
+            dataPath: 'result.data.data',
+            latitude: 'latitude',
+            longitude: 'longitude'
+          },
+          apply: (item) => {
+            const measurements = _.get(item.data, 'data.features')
+            console.log(`[!] Found ${_.size(measurements)} measurements`)
+          },
+          updateMongoCollection: {
+            dataPath: 'result.data.data.features',
+            collection,
+            filter: { 'properties.reportUuid': '<%= properties.reportUuid %>' },
+            upsert : true,
+            transform: {
+              mapping: {
+                'properties.startTime': { path: 'time', delete: false },
+                'properties.userId': { path: 'properties.name', delete: false }
+              },
+              unitMapping: { 
+                time: { asDate: 'utc' } 
+              } 
+            },
+            chunkSize: 256
+          },
+          clearData: {}
+        }
       },
-      after: {
-        disconnectMongo: {
-          clientPath: 'taskTemplate.client'
+      jobs: {
+        before: {
+          createStores: { id: 'memory' },
+          connectMongo: {
+            url: dbUrl,
+            clientPath: 'taskTemplate.client'
+          },
+          createMongoCollection: {
+            clientPath: 'taskTemplate.client',
+            collection,
+            indices: [
+              [{ time: 1, 'properties.reportUuid': 1 }, { unique: true }],
+              { 'properties.reportUuid': 1 },
+              [{ 'properties.reportUuid': 1, 'properties.value': 1, time: -1 },  { background: true }],
+              [{ time: 1 }, { expireAfterSeconds: ttl }], // days in s
+              { geometry: '2dsphere' }                                                                                                              
+            ],
+          },
+          generateTask: {}
         },
-        removeStores: ['memory']
-      },
-      error: {
-        disconnectMongo: {
-          clientPath: 'taskTemplate.client'
+        after: {
+          disconnectMongo: {
+            clientPath: 'taskTemplate.client'
+          },
+          removeStores: ['memory']
         },
-        removeStores: ['memory']
+        error: {
+          disconnectMongo: {
+            clientPath: 'taskTemplate.client'
+          },
+          removeStores: ['memory']
+        }
       }
     }
   }
 }
 
+// Create a base job by default
+export default createJob()
