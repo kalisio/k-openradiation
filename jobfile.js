@@ -5,6 +5,8 @@ import { hooks } from '@kalisio/krawler'
 const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/openradiation'
 const ttl = +process.env.TTL || (7 * 24 * 60 * 60)  // duration in seconds
 const key = process.env.KEY
+// For testing purpose we can set a fixed date
+const dateOfCreation = process.env.DATE_OF_CREATION
 
 const baseUrl = 'https://request.openradiation.net/measurements'
 
@@ -12,12 +14,12 @@ const baseUrl = 'https://request.openradiation.net/measurements'
 let generateTask = (options) => {
   return (hook) => {
     // For testing purpose we can set a fixed date
-    const now = moment.utc(process.env.DATE_OF_CREATION)
-    const dateOfCreation = now.format('YYYY-M-D')
-    console.log('Querying the api with the following dateOfCreation: ' + dateOfCreation)
+    const now = moment.utc(dateOfCreation)
+    const formattedDateOfCreation = now.format('YYYY-M-D')
+    console.log('Querying the api with the following dateOfCreation: ' + formattedDateOfCreation)
     let task = {
       options: { 
-        url: baseUrl + '?apiKey=' + key + '&dateOfCreation=' + dateOfCreation + '&response=complete'
+        url: baseUrl + '?apiKey=' + key + '&dateOfCreation=' + formattedDateOfCreation + '&response=complete'
       }
     }
     hook.data.tasks = [task]
