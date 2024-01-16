@@ -6,8 +6,8 @@ const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/openradiation'
 const ttl = +process.env.TTL || (7 * 24 * 60 * 60)  // duration in seconds
 const key = process.env.KEY
 const collection = process.env.COLLECTION || 'openradiation'
-// For testing purpose we can set a fixed date
-const dateOfCreation = process.env.DATE_OF_CREATION
+// For testing purpose we can set a fixed date, take care that empty string might be interpreted wrongly
+const dateOfCreation = (process.env.DATE_OF_CREATION ? process.env.DATE_OF_CREATION : undefined)
 
 const baseUrl = 'https://request.openradiation.net/measurements'
 
