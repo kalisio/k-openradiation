@@ -8,31 +8,31 @@ ROOT_DIR=$(dirname "$THIS_DIR")
 
 . "$THIS_DIR/kash/kash.sh"
 
-begin_group "Setting up openradiation ..."
+begin_group "Setting up workspace ..."
 
 if [ "$CI" = true ]; then
-    openradiation_DIR="$(dirname "$ROOT_DIR")"
+    WORKSPACE_DIR="$(dirname "$ROOT_DIR")"
     DEVELOPMENT_REPO_URL="https://$GITHUB_DEVELOPMENT_PAT@github.com/kalisio/development.git"
 else
     while getopts "b:t" option; do
         case $option in
             b) # defines branch
-                openradiation_BRANCH=$OPTARG;;
+                WORKSPACE_BRANCH=$OPTARG;;
             t) # defines tag
-                openradiation_TAG=$OPTARG;;
+                WORKSPACE_TAG=$OPTARG;;
             *)
             ;;
         esac
     done
 
     shift $((OPTIND-1))
-    openradiation_DIR="$1"
+    WORKSPACE_DIR="$1"
     DEVELOPMENT_REPO_URL="$GITHUB_URL/kalisio/development.git"
 
-    # Clone project in the openradiation
-    git_shallow_clone "$GITHUB_URL/kalisio/k-centipede.git" "$openradiation_DIR/k-centipede" "${openradiation_TAG:-${openradiation_BRANCH:-}}"
+    # Clone project in the workspace
+    git_shallow_clone "$GITHUB_URL/kalisio/k-openradiation.git" "$WORKSPACE_DIR/k-openradiation" "${WORKSPACE_TAG:-${WORKSPACE_BRANCH:-}}"
 fi
 
-setup_job_openradiation "$openradiation_DIR" "$DEVELOPMENT_REPO_URL"
+setup_job_workspace "$WORKSPACE_DIR" "$DEVELOPMENT_REPO_URL"
 
-end_group "Setting up openradiation ..."
+end_group "Setting up workspace ..."
