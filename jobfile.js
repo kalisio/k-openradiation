@@ -2,12 +2,12 @@ import _ from 'lodash'
 import moment from 'moment'
 import { hooks } from '@kalisio/krawler'
 
-const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/openradiation'
-const ttl = +process.env.TTL || (7 * 24 * 60 * 60)  // duration in seconds
-const key = process.env.KEY
-const collection = process.env.COLLECTION || 'openradiation'
+const DB_URL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/openradiation'
+const TTL = +process.env.TTL || (7 * 24 * 60 * 60)  // duration in seconds
+const KEY = process.env.KEY
+const COLLECTION = process.env.COLLECTION || 'openradiation'
 // For testing purpose we can set a fixed date, take care that empty string might be interpreted wrongly
-const dateOfCreation = (process.env.DATE_OF_CREATION ? process.env.DATE_OF_CREATION : undefined)
+const DATE_OF_CREATION = (process.env.DATE_OF_CREATION ? process.env.DATE_OF_CREATION : undefined)
 
 const baseUrl = 'https://request.openradiation.net/measurements'
 
@@ -15,12 +15,12 @@ const baseUrl = 'https://request.openradiation.net/measurements'
 let generateTask = (options) => {
   return (hook) => {
     // For testing purpose we can set a fixed date
-    const now = moment.utc(dateOfCreation)
+    const now = moment.utc(DATE_OF_CREATION)
     const formattedDateOfCreation = now.format('YYYY-M-D')
     console.log('Querying the api with the following dateOfCreation: ' + formattedDateOfCreation)
     let task = {
       options: { 
-        url: baseUrl + '?apiKey=' + key + '&dateOfCreation=' + formattedDateOfCreation + '&response=complete'
+        url: baseUrl + '?apiKey=' + KEY + '&dateOfCreation=' + formattedDateOfCreation + '&response=complete'
       }
     }
     hook.data.tasks = [task]
@@ -54,7 +54,7 @@ export default {
         },
         updateMongoCollection: {
           dataPath: 'result.data.data.features',
-          collection,
+          COLLECTION,
           filter: { 'properties.reportUuid': '<%= properties.reportUuid %>' },
           upsert : true,
           transform: {
@@ -75,17 +75,17 @@ export default {
       before: {
         createStores: { id: 'memory' },
         connectMongo: {
-          url: dbUrl,
+          url: DB_URL,
           clientPath: 'taskTemplate.client'
         },
         createMongoCollection: {
           clientPath: 'taskTemplate.client',
-          collection,
+          COLLECTION,
           indices: [
             [{ time: 1, 'properties.reportUuid': 1 }, { unique: true }],
             { 'properties.reportUuid': 1 },
             [{ 'properties.reportUuid': 1, 'properties.value': 1, time: -1 },  { background: true }],
-            [{ time: 1 }, { expireAfterSeconds: ttl }], // days in s
+            [{ time: 1 }, { expireAfterSeconds: TTL }], // days in s
             { geometry: '2dsphere' }                                                                                                              
           ],
         },
