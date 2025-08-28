@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import moment from 'moment'
+import winston from 'winston'
 import { hooks } from '@kalisio/krawler'
 
 const DB_URL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/openradiation'
@@ -48,9 +49,9 @@ export default {
           latitude: 'latitude',
           longitude: 'longitude'
         },
-        apply: (item) => {
-          const measurements = _.get(item.data, 'data.features')
-          console.log(`[!] Found ${_.size(measurements)} measurements`)
+        log: (logger, item) => {
+          const measurements = _.get(item.data, 'data.features', [])
+          logger.info(`${measurements.length} observations found`)
         },
         updateMongoCollection: {
           dataPath: 'result.data.data.features',
@@ -78,6 +79,18 @@ export default {
           url: DB_URL,
           clientPath: 'taskTemplate.client'
         },
+        createLogger: {
+            loggerPath: 'taskTemplate.logger',
+            Console: {
+              format: winston.format.printf(log =>
+                winston.format.colorize().colorize(
+                  log.level,
+                  `${log.level}: ${log.message}`
+                )
+              ),
+              level: 'verbose'
+            }
+          },
         createMongoCollection: {
           clientPath: 'taskTemplate.client',
           COLLECTION,
@@ -95,11 +108,17 @@ export default {
         disconnectMongo: {
           clientPath: 'taskTemplate.client'
         },
+        removeLogger: {
+          loggerPath: 'taskTemplate.logger'
+        },
         removeStores: ['memory']
       },
       error: {
         disconnectMongo: {
           clientPath: 'taskTemplate.client'
+        },
+        removeLogger: {
+          loggerPath: 'taskTemplate.logger'
         },
         removeStores: ['memory']
       }
