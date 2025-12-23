@@ -12,10 +12,14 @@ WORKSPACE_DIR="$(dirname "$ROOT_DIR")"
 ## Parse options
 ##
 
+RUN_SONAR=false
 PUBLISH=false
 CI_STEP_NAME="Build"
 while getopts "pr:" option; do
     case $option in
+        s) # enable SonarQube analysis and publish code quality & coverage results
+            RUN_SONAR=true
+            ;;
         p) # publish
             PUBLISH=true
             ;;
@@ -34,6 +38,7 @@ done
 
 load_env_files "$WORKSPACE_DIR/development/common/kalisio_dockerhub.enc.env"
 load_value_files "$WORKSPACE_DIR/development/common/KALISIO_DOCKERHUB_PASSWORD.enc.value"
+. "$WORKSPACE_DIR/development/workspaces/jobs/jobs.sh" k-openradiation
 
 ## Build container
 ##
@@ -46,3 +51,5 @@ build_job \
     "$KALISIO_DOCKERHUB_USERNAME" \
     "$KALISIO_DOCKERHUB_PASSWORD" \
     "$PUBLISH"
+
+cd "$ROOT_DIR" && sonar-scanner
