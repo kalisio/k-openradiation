@@ -3,7 +3,6 @@
 [![Latest Release](https://img.shields.io/github/v/tag/kalisio/k-openradiation?sort=semver&label=latest)](https://github.com/kalisio/k-openradiation/releases)
 [![CI](https://github.com/kalisio/k-openradiation/actions/workflows/main.yaml/badge.svg)](https://github.com/kalisio/k-openradiation/actions/workflows/main.yaml)
 [![Maintainability Issues](https://sonar.portal.kalisio.com/api/project_badges/measure?project=kalisio-k-openradiation&metric=software_quality_maintainability_issues&token=sqb_c37cb818ae00aa4d6216ddd07bea1b947c5e3710)](https://sonar.portal.kalisio.com/dashboard?id=kalisio-k-openradiation)
-[![Coverage](https://sonar.portal.kalisio.com/api/project_badges/measure?project=kalisio-k-openradiation&metric=coverage&token=sqb_c37cb818ae00aa4d6216ddd07bea1b947c5e3710)](https://sonar.portal.kalisio.com/dashboard?id=kalisio-k-openradiation)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A [Krawler](https://kalisio.github.io/krawler/) based service to download data from the [OpenRadiation](https://www.openradiation.org/) project.
