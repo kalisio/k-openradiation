@@ -10,7 +10,7 @@ A [Krawler](https://kalisio.github.io/krawler/) based service to download data f
 
 ## Description
 
-The **k-openradiation** job allow to scrape measurements from the [OpenRadiation API](https://github.com/openradiation/openradiation-api). The downloaded data are stored within a [MongoDB](https://www.mongodb.com/) database and more precisely in a collection named `openradiation`. 
+The **k-openradiation** job allow to scrape measurements from the [OpenRadiation API](https://github.com/openradiation/openradiation-api). The downloaded data are stored within a [MongoDB](https://www.mongodb.com/) database and more precisely in a collection named `openradiation`.
 
 All records are stored in [GeoJson](https://fr.wikipedia.org/wiki/GeoJSON) format.
 
@@ -35,12 +35,10 @@ We personally use [Kargo](https://kalisio.github.io/kargo/) to deploy the servic
 
 Please refer to [contribution section](./CONTRIBUTING.md) for more details.
 
-## Authors
-
-This project is sponsored by 
-
-![Kalisio](https://s3.eu-central-1.amazonaws.com/kalisioscope/kalisio/kalisio-logo-black-256x84.png)
-
 ## License
 
-This project is licensed under the MIT License - see the [license file](./LICENSE) for details
+Licensed under the [MIT license](LICENSE).
+
+Copyright (c) 2017-20xx [Kalisio](https://kalisio.com)
+
+[![Kalisio](https://kalisio.github.io/kalisioscope/kalisio/kalisio-logo-black-256x84.png)](https://kalisio.com)
